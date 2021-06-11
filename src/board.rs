@@ -1,6 +1,8 @@
 use std::fmt;
 
-const SIZE: usize = 64; //Number of squares on a board
+const COLUMNS: usize = 8;
+const ROWS: usize = 8;
+const SIZE: usize = COLUMNS * ROWS; //Number of squares on a board
 const INIT: Option<Piece> = None; //Default piece for any square
 
 #[derive(Debug)]
@@ -114,82 +116,14 @@ impl Default for Board {
 
 impl fmt::Display for Board {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "
-            {} {} {} {} {} {} {} {}\n
-            {} {} {} {} {} {} {} {}\n
-            {} {} {} {} {} {} {} {}\n
-            {} {} {} {} {} {} {} {}\n
-            {} {} {} {} {} {} {} {}\n
-            {} {} {} {} {} {} {} {}\n
-            {} {} {} {} {} {} {} {}\n
-            {} {} {} {} {} {} {} {}
-        ",
-            Piece::get_symbol(&self.fields[56]),
-            Piece::get_symbol(&self.fields[57]),
-            Piece::get_symbol(&self.fields[58]),
-            Piece::get_symbol(&self.fields[59]),
-            Piece::get_symbol(&self.fields[60]),
-            Piece::get_symbol(&self.fields[61]),
-            Piece::get_symbol(&self.fields[62]),
-            Piece::get_symbol(&self.fields[63]),
-            Piece::get_symbol(&self.fields[48]),
-            Piece::get_symbol(&self.fields[49]),
-            Piece::get_symbol(&self.fields[50]),
-            Piece::get_symbol(&self.fields[51]),
-            Piece::get_symbol(&self.fields[52]),
-            Piece::get_symbol(&self.fields[53]),
-            Piece::get_symbol(&self.fields[54]),
-            Piece::get_symbol(&self.fields[55]),
-            Piece::get_symbol(&self.fields[40]),
-            Piece::get_symbol(&self.fields[41]),
-            Piece::get_symbol(&self.fields[42]),
-            Piece::get_symbol(&self.fields[43]),
-            Piece::get_symbol(&self.fields[44]),
-            Piece::get_symbol(&self.fields[45]),
-            Piece::get_symbol(&self.fields[46]),
-            Piece::get_symbol(&self.fields[47]),
-            Piece::get_symbol(&self.fields[32]),
-            Piece::get_symbol(&self.fields[33]),
-            Piece::get_symbol(&self.fields[34]),
-            Piece::get_symbol(&self.fields[35]),
-            Piece::get_symbol(&self.fields[36]),
-            Piece::get_symbol(&self.fields[37]),
-            Piece::get_symbol(&self.fields[38]),
-            Piece::get_symbol(&self.fields[39]),
-            Piece::get_symbol(&self.fields[24]),
-            Piece::get_symbol(&self.fields[25]),
-            Piece::get_symbol(&self.fields[26]),
-            Piece::get_symbol(&self.fields[27]),
-            Piece::get_symbol(&self.fields[28]),
-            Piece::get_symbol(&self.fields[29]),
-            Piece::get_symbol(&self.fields[30]),
-            Piece::get_symbol(&self.fields[31]),
-            Piece::get_symbol(&self.fields[16]),
-            Piece::get_symbol(&self.fields[17]),
-            Piece::get_symbol(&self.fields[18]),
-            Piece::get_symbol(&self.fields[19]),
-            Piece::get_symbol(&self.fields[20]),
-            Piece::get_symbol(&self.fields[21]),
-            Piece::get_symbol(&self.fields[22]),
-            Piece::get_symbol(&self.fields[23]),
-            Piece::get_symbol(&self.fields[8]),
-            Piece::get_symbol(&self.fields[9]),
-            Piece::get_symbol(&self.fields[10]),
-            Piece::get_symbol(&self.fields[11]),
-            Piece::get_symbol(&self.fields[12]),
-            Piece::get_symbol(&self.fields[13]),
-            Piece::get_symbol(&self.fields[14]),
-            Piece::get_symbol(&self.fields[15]),
-            Piece::get_symbol(&self.fields[0]),
-            Piece::get_symbol(&self.fields[1]),
-            Piece::get_symbol(&self.fields[2]),
-            Piece::get_symbol(&self.fields[3]),
-            Piece::get_symbol(&self.fields[4]),
-            Piece::get_symbol(&self.fields[5]),
-            Piece::get_symbol(&self.fields[6]),
-            Piece::get_symbol(&self.fields[7])
-        )
+        write!(f, "\n")?;
+        for row in (0..ROWS).rev(){
+            for column in 0..COLUMNS{
+                let piece_idx = (row * 8) + column;
+                write!(f, "{} ", Piece::get_symbol(&self.fields[piece_idx]))?;
+            }
+            write!(f, "\n")?;
+        }
+        Ok(())
     }
 }
