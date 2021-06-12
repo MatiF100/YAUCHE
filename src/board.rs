@@ -45,29 +45,24 @@ impl Piece {
         }
     }
 
-    pub fn get_symbol(piece: &Option<Piece>) -> char {
-        match piece {
-            Some(piece) => match piece.piece_color {
-                PieceColor::White => match piece.piece_type {
-                    PieceType::King => '\u{2654}',
-                    PieceType::Queen => '\u{2655}',
-                    PieceType::Rook => '\u{2656}',
-                    PieceType::Bishop => '\u{2657}',
-                    PieceType::Knight => '\u{2658}',
-                    PieceType::Pawn => '\u{2659}',
-                    _ => 'X',
-                },
-                PieceColor::Black => match piece.piece_type {
-                    PieceType::King => '\u{265A}',
-                    PieceType::Queen => '\u{265B}',
-                    PieceType::Rook => '\u{265C}',
-                    PieceType::Bishop => '\u{265D}',
-                    PieceType::Knight => '\u{265E}',
-                    PieceType::Pawn => '\u{265F}',
-                    _ => 'X',
-                },
+    pub fn get_symbol(&self) -> char {
+        match self.piece_color {
+            PieceColor::White => match self.piece_type {
+                PieceType::King => '\u{2654}',
+                PieceType::Queen => '\u{2655}',
+                PieceType::Rook => '\u{2656}',
+                PieceType::Bishop => '\u{2657}',
+                PieceType::Knight => '\u{2658}',
+                PieceType::Pawn => '\u{2659}',
             },
-            None => ' ',
+            PieceColor::Black => match self.piece_type {
+                PieceType::King => '\u{265A}',
+                PieceType::Queen => '\u{265B}',
+                PieceType::Rook => '\u{265C}',
+                PieceType::Bishop => '\u{265D}',
+                PieceType::Knight => '\u{265E}',
+                PieceType::Pawn => '\u{265F}',
+            },
         }
     }
 }
@@ -117,10 +112,17 @@ impl Default for Board {
 impl fmt::Display for Board {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "\n")?;
-        for row in (0..ROWS).rev(){
-            for column in 0..COLUMNS{
+        for row in (0..ROWS).rev() {
+            for column in 0..COLUMNS {
                 let piece_idx = (row * 8) + column;
-                write!(f, "{} ", Piece::get_symbol(&self.fields[piece_idx]))?;
+                write!(
+                    f,
+                    "{} ",
+                    match &self.fields[piece_idx] {
+                        Some(piece) => piece.get_symbol(),
+                        None => ' ',
+                    }
+                )?;
             }
             write!(f, "\n")?;
         }
