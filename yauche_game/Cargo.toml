@@ -1,0 +1,9 @@
+[package]
+name = "yauche_game"
+version = "0.2.0"
+authors = ["MatiF100 <mateuszfesz@wp.pl>"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]

@@ -25,6 +25,7 @@ pub enum PieceColor {
 pub struct Piece {
     piece_type: PieceType,
     piece_color: PieceColor,
+    has_moved: bool,
 }
 impl Piece {
     pub fn new(name: &str, black: bool) -> Self {
@@ -42,8 +43,11 @@ impl Piece {
                 "queen" => PieceType::Queen,
                 _ => PieceType::Pawn,
             },
+            has_moved: false,
         }
     }
+
+    //    pub fn get_moves(&self, board: &Board) -> Vec<
 
     pub fn get_symbol(&self) -> char {
         match self.piece_color {
@@ -72,6 +76,7 @@ impl Default for Piece {
         Self {
             piece_color: PieceColor::White,
             piece_type: PieceType::Pawn,
+            has_moved: false,
         }
     }
 }
