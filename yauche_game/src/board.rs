@@ -1,49 +1,43 @@
 use std::fmt;
 
-const COLUMNS: usize = 8;
-const ROWS: usize = 8;
-const SIZE: usize = COLUMNS * ROWS; //Number of squares on a board
+pub const COLUMNS: usize = 10;
+pub const ROWS: usize = 12;
+pub const SIZE: usize = COLUMNS * ROWS; //Number of squares on a board
 const INIT: Option<Piece> = None; //Default piece for any square
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum PieceType {
-    Pawn,
+    Pawn(bool),
     Queen,
-    Rook,
+    Rook(bool),
     Bishop,
     Knight,
-    King,
+    King(bool),
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum PieceColor {
     Black,
     White,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct Piece {
-    piece_type: PieceType,
-    piece_color: PieceColor,
-    has_moved: bool,
+    pub piece_type: PieceType,
+    pub piece_color: PieceColor,
 }
 impl Piece {
-    pub fn new(name: &str, black: bool) -> Self {
+    pub fn new(name: &str, color: PieceColor) -> Self {
         Self {
-            piece_color: if black == true {
-                PieceColor::Black
-            } else {
-                PieceColor::White
-            },
+            piece_color: color,
             piece_type: match name {
-                "king" => PieceType::King,
+                "king" => PieceType::King(false),
                 "knight" => PieceType::Knight,
-                "rook" => PieceType::Rook,
+                "rook" => PieceType::Rook(false),
                 "bishop" => PieceType::Bishop,
                 "queen" => PieceType::Queen,
-                _ => PieceType::Pawn,
+                _ => PieceType::Pawn(false),
             },
-            has_moved: false,
         }
     }
 
@@ -51,21 +45,21 @@ impl Piece {
 
     pub fn get_symbol(&self) -> char {
         match self.piece_color {
-            PieceColor::White => match self.piece_type {
-                PieceType::King => '\u{2654}',
+            PieceColor::Black => match self.piece_type {
+                PieceType::King(_) => '\u{2654}',
                 PieceType::Queen => '\u{2655}',
-                PieceType::Rook => '\u{2656}',
+                PieceType::Rook(_) => '\u{2656}',
                 PieceType::Bishop => '\u{2657}',
                 PieceType::Knight => '\u{2658}',
-                PieceType::Pawn => '\u{2659}',
+                PieceType::Pawn(_) => '\u{2659}',
             },
-            PieceColor::Black => match self.piece_type {
-                PieceType::King => '\u{265A}',
+            PieceColor::White => match self.piece_type {
+                PieceType::King(_) => '\u{265A}',
                 PieceType::Queen => '\u{265B}',
-                PieceType::Rook => '\u{265C}',
+                PieceType::Rook(_) => '\u{265C}',
                 PieceType::Bishop => '\u{265D}',
                 PieceType::Knight => '\u{265E}',
-                PieceType::Pawn => '\u{265F}',
+                PieceType::Pawn(_) => '\u{265F}',
             },
         }
     }
@@ -75,36 +69,35 @@ impl Default for Piece {
     fn default() -> Self {
         Self {
             piece_color: PieceColor::White,
-            piece_type: PieceType::Pawn,
-            has_moved: false,
+            piece_type: PieceType::Pawn(false),
         }
     }
 }
 
 #[derive(Debug)]
 pub struct Board {
-    fields: [Option<Piece>; SIZE],
+    pub fields: [Option<Piece>; SIZE],
 }
 
 impl Default for Board {
     fn default() -> Self {
         let mut default_board: [Option<Piece>; SIZE] = [INIT; SIZE];
-        for i in 0..64 {
+        for i in 0..SIZE {
             default_board[i] = match i {
-                0 | 7 => Some(Piece::new("rook", false)),
-                1 | 6 => Some(Piece::new("knight", false)),
-                2 | 5 => Some(Piece::new("bishop", false)),
-                3 => Some(Piece::new("queen", false)),
-                4 => Some(Piece::new("king", false)),
-                (8..=15) => Some(Piece::new("pawn", false)),
+                21 | 28 => Some(Piece::new("rook", PieceColor::White)),
+                22 | 27 => Some(Piece::new("knight", PieceColor::White)),
+                23 | 26 => Some(Piece::new("bishop", PieceColor::White)),
+                24 => Some(Piece::new("queen", PieceColor::White)),
+                25 => Some(Piece::new("king", PieceColor::White)),
+                (31..=38) => Some(Piece::new("pawn", PieceColor::White)),
                 //56 63
                 //55 48
-                56 | 63 => Some(Piece::new("rook", true)),
-                57 | 62 => Some(Piece::new("knight", true)),
-                58 | 61 => Some(Piece::new("bishop", true)),
-                59 => Some(Piece::new("queen", true)),
-                60 => Some(Piece::new("king", true)),
-                (48..=55) => Some(Piece::new("pawn", true)),
+                91 | 98 => Some(Piece::new("rook", PieceColor::Black)),
+                92 | 97 => Some(Piece::new("knight", PieceColor::Black)),
+                93 | 96 => Some(Piece::new("bishop", PieceColor::Black)),
+                94 => Some(Piece::new("queen", PieceColor::Black)),
+                95 => Some(Piece::new("king", PieceColor::Black)),
+                (81..=88) => Some(Piece::new("pawn", PieceColor::Black)),
                 _ => None,
             };
         }
@@ -119,7 +112,7 @@ impl fmt::Display for Board {
         write!(f, "\n")?;
         for row in (0..ROWS).rev() {
             for column in 0..COLUMNS {
-                let piece_idx = (row * 8) + column;
+                let piece_idx = (row * 10) + column;
                 write!(
                     f,
                     "{} ",
