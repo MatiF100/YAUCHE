@@ -74,7 +74,7 @@ impl Default for Piece {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct Board {
     pub fields: [Option<Piece>; SIZE],
 }

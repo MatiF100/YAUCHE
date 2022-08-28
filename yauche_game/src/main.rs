@@ -1,3 +1,5 @@
+use crate::board::Board;
+
 mod board;
 mod moves;
 
@@ -19,21 +21,34 @@ fn main() {
         ep: None,
         castle: None,
     };
+    let tes2 = moves::Move {
+        captured: None,
+        promotion: None,
+        source: 33,
+        target: 63,
+        ep: None,
+        castle: None,
+    };
     let mut move_log: Vec<moves::Move> = Vec::new();
 
-    board.make_move(&test, &mut move_log);
+    //board.make_move(&test, &mut move_log);
     board.make_move(&a, &mut move_log);
+    //board.make_move(&tes2, &mut move_log);
     println!("Current board state is: {}", board);
     println!(
-        "Found {} pseudo-valid moves for white!",
+        "Found {} valid moves for white!",
         board
-            .get_pv_moves(&board::PieceColor::White, &move_log)
+            .get_v_moves(&board::PieceColor::White, &move_log)
             .len()
     );
     println!(
-        "Found {:?} pseudo-valid moves for black!",
+        "Found {:?} valid moves for black!",
         board
-            .get_pv_moves(&board::PieceColor::Black, &move_log)
+            .get_v_moves(&board::PieceColor::Black, &move_log)
             .len()
     );
+
+    let perft_board = board::Board::default();
+    let mut move_log: Vec<moves::Move> = Vec::new();
+    println!("Perft result: {}", perft_board.perft(3, &mut move_log, &board::PieceColor::White));
 }
