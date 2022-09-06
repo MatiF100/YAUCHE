@@ -21,7 +21,7 @@ pub enum PieceColor {
     White,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Piece {
     pub piece_type: PieceType,
     pub piece_color: PieceColor,
@@ -74,7 +74,7 @@ impl Default for Piece {
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Board {
     pub fields: [Option<Piece>; SIZE],
 }

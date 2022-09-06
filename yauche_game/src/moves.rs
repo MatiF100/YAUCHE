@@ -54,11 +54,18 @@ impl Board {
 
         let moves = self.get_pv_moves(color, log);
         for pv_move in moves{
+            //let pre_board = board.clone();
             board.make_move(&pv_move, &mut log_copy);
             if board.validate(){
                 nodes += board.perft(depth - 1, &log_copy, if *color == PieceColor::Black {&PieceColor::White} else {&PieceColor::Black});
             }
             board.undo_move(&mut log_copy);
+            //let post_board = board.clone();
+            //if pre_board != post_board{
+            //    dbg!(pre_board.fields.iter().zip(post_board.fields).filter(|p| *p.0 != p.1).collect::<Vec<_>>(),pv_move, &log_copy);
+            //    println!("Current board state is: {}", board);
+            //}
+            //assert_eq!(pre_board, post_board);
         }
         nodes
 
@@ -515,6 +522,7 @@ impl Board {
                 //target for first move
                 let target = (position as isize + 2 * step) as usize;
                 if self.fields[target].is_none()
+                    && (self.fields[target - 10].is_none() && *color == PieceColor::White || self.fields[target + 10].is_none() && *color == PieceColor::Black)
                     && pawn.unwrap().piece_type == PieceType::Pawn(false)
                 {
                     let tmp = Move::create_move(position, target, None);
@@ -668,8 +676,13 @@ impl Board {
                     p.piece_type = PieceType::Pawn(false);
                     self.fields[mv.source] = Some(p);
                 }
+                else {
+                    self.fields[mv.source] = self.fields[mv.target];
+                }
             }
-            self.fields[mv.source] = self.fields[mv.target];
+            else{
+                self.fields[mv.source] = self.fields[mv.target];
+            }
             self.fields[mv.target] = mv.captured;
         };
     }

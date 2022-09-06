@@ -50,5 +50,5 @@ fn main() {
 
     let perft_board = board::Board::default();
     let mut move_log: Vec<moves::Move> = Vec::new();
-    println!("Perft result: {}", perft_board.perft(3, &mut move_log, &board::PieceColor::White));
+    println!("Perft result: {}", perft_board.perft(6, &mut move_log, &board::PieceColor::White));
 }
